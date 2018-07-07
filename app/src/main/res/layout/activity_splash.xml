@@ -3,11 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SplashActivity">
+    tools:context=".activity.SplashActivity"
+    android:background="#00bcd4"
+    android:paddingRight="30dp"
+    android:paddingLeft="31dp"
+    android:paddingTop="229dp"
+    android:paddingBottom="228dp">
 
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:src="@drawable/logo" />
 
 </RelativeLayout>

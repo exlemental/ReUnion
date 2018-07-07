@@ -8,15 +8,28 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.safaorhan.reunion.FirestoreHelper;
 import com.safaorhan.reunion.R;
 
 public class SplashActivity extends AppCompatActivity {
+
+    private final int SPLASH_DISPLAY_LENGTH = 2500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                    navigateToLoginDelayed(1000);
+                } else {
+                    navigateToConversationsDelayed(1000);
+                }
 
+            }
+        }, SPLASH_DISPLAY_LENGTH);
         configureFirestore();
     }
 
@@ -29,16 +42,7 @@ public class SplashActivity extends AppCompatActivity {
         firestore.setFirestoreSettings(settings);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            navigateToLoginDelayed(1000);
-        } else {
-            navigateToConversationsDelayed(1000);
-        }
-    }
 
     private void navigateToLoginDelayed(int delayMillis) {
         new Handler().postDelayed(new Runnable() {
@@ -46,6 +50,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         }, delayMillis);
     }
@@ -54,8 +59,9 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, ConversationsActivity.class);
+                Intent intent = new Intent(SplashActivity.this,ConversationsActivity.class);
                 startActivity(intent);
+                finish();
             }
         }, delayMillis);
     }
