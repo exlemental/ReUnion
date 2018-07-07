@@ -17,9 +17,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/AppTheme.FullScreen" />
         <activity android:name=".activity.ConversationsActivity" />
         <activity android:name=".activity.UsersActivity" />
+        <activity android:name=".activity.MessagingActivity"></activity>
     </application>
 
 </manifest>
