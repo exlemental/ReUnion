@@ -22,12 +22,15 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                    SplashActivity.this.startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                    finish();
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                    navigateToLoginDelayed(1000);
+                } else {
+                    navigateToConversationsDelayed(1000);
+                }
 
             }
         }, SPLASH_DISPLAY_LENGTH);
-        //configureFirestore();
+        configureFirestore();
     }
 
     private void configureFirestore() {
@@ -39,16 +42,7 @@ public class SplashActivity extends AppCompatActivity {
         firestore.setFirestoreSettings(settings);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            navigateToLoginDelayed(1000);
-        } else {
-            navigateToConversationsDelayed(1000);
-        }
-    }
 
     private void navigateToLoginDelayed(int delayMillis) {
         new Handler().postDelayed(new Runnable() {
@@ -56,6 +50,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         }, delayMillis);
     }
@@ -66,6 +61,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(SplashActivity.this,ConversationsActivity.class);
                 startActivity(intent);
+                finish();
             }
         }, delayMillis);
     }
