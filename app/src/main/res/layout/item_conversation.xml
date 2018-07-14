@@ -1,25 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:orientation="vertical"
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/opponentNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/br_red"
+        android:id="@+id/char_item"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/bg_red"
         android:gravity="center"
-        tools:text="Opponent Name Text"/>
+        tools:text="AE"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_margin="10dp"
+        />
 
-    <TextView
-        android:id="@+id/lastMessageText"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/detail_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        tools:Text="Last Message Text"/>
+        android:layout_toRightOf="@+id/char_item"
+        android:orientation="vertical"
+        android:layout_toEndOf="@+id/char_item">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/opponentNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="18dp"
+            android:textSize="18sp"
+            android:textColor="@color/Black"
+            tools:text="Opponent Name Text" />
+
+        <TextView
+            android:id="@+id/lastMessageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Last Message Text"/>
+    </LinearLayout>
+
+</RelativeLayout>

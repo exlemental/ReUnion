@@ -76,12 +76,14 @@ public class ConversationAdapter extends FirestoreRecyclerAdapter<Conversation, 
     public class ConversationHolder extends RecyclerView.ViewHolder {
 
         View itemView;
+        TextView firstChar;
         TextView opponentNameText;
         TextView lastMessageText;
 
         public ConversationHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
+            firstChar = itemView.findViewById(R.id.char_item);
             opponentNameText = itemView.findViewById(R.id.opponentNameText);
             lastMessageText = itemView.findViewById(R.id.lastMessageText);
         }
@@ -101,13 +103,16 @@ public class ConversationAdapter extends FirestoreRecyclerAdapter<Conversation, 
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     User opponent = documentSnapshot.toObject(User.class);
-                    opponentNameText.setText(opponent.getName());
+                    if (opponent != null) {
+                        opponentNameText.setText(opponent.getName());
+                        firstChar.setText(String.format("%s", opponent.getName().charAt(0)));
+                    }
                     itemView.setVisibility(View.VISIBLE);
                 }
             });
 
 
-            if(conversation.getLastMessage() != null) {
+            if (conversation.getLastMessage() != null) {
                 conversation.getLastMessage().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
