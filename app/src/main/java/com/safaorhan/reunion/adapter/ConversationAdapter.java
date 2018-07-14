@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,9 +22,20 @@ import com.safaorhan.reunion.model.Conversation;
 import com.safaorhan.reunion.model.Message;
 import com.safaorhan.reunion.model.User;
 
+import java.util.Random;
+
+import io.grpc.internal.SharedResourceHolder;
+
 public class ConversationAdapter extends FirestoreRecyclerAdapter<Conversation, ConversationAdapter.ConversationHolder> {
     private static final String TAG = ConversationAdapter.class.getSimpleName();
     ConversationClickListener conversationClickListener;
+    int[] myImageList = new int[]{R.drawable.bg_blue1,
+            R.drawable.bg_blue2,
+            R.drawable.bg_green0,
+            R.drawable.bg_purple,
+            R.drawable.bg_red,
+            R.drawable.bg_turquoise_blue,
+    };
 
 
     public ConversationAdapter(@NonNull FirestoreRecyclerOptions<Conversation> options) {
@@ -48,9 +60,12 @@ public class ConversationAdapter extends FirestoreRecyclerAdapter<Conversation, 
     }
 
     public static ConversationAdapter get() {
+        String id = FirestoreHelper.getMe().getId();
         Query query = FirebaseFirestore.getInstance()
                 .collection("conversations")
+                .whereEqualTo(id, true)
                 //.orderBy("timestamp")
+                .whereEqualTo(FirestoreHelper.getMe().getId(), true)
                 .limit(50);
 
         FirestoreRecyclerOptions<Conversation> options = new FirestoreRecyclerOptions.Builder<Conversation>()
@@ -63,6 +78,10 @@ public class ConversationAdapter extends FirestoreRecyclerAdapter<Conversation, 
     @Override
     protected void onBindViewHolder(@NonNull ConversationHolder holder, int position, @NonNull Conversation conversation) {
         conversation.setId(getSnapshots().getSnapshot(position).getId());
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        String myId = firebaseAuth.getUid();
+        Log.e("myId", myId);
+        Log.e("conversation.getId", getSnapshots().getSnapshot(position).getId());
         holder.bind(conversation);
     }
 
@@ -76,12 +95,14 @@ public class ConversationAdapter extends FirestoreRecyclerAdapter<Conversation, 
     public class ConversationHolder extends RecyclerView.ViewHolder {
 
         View itemView;
+        TextView firstChar;
         TextView opponentNameText;
         TextView lastMessageText;
 
         public ConversationHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
+            firstChar = itemView.findViewById(R.id.char_item);
             opponentNameText = itemView.findViewById(R.id.opponentNameText);
             lastMessageText = itemView.findViewById(R.id.lastMessageText);
         }
@@ -103,8 +124,14 @@ public class ConversationAdapter extends FirestoreRecyclerAdapter<Conversation, 
                     User opponent = documentSnapshot.toObject(User.class);
                     if (opponent != null) {
                         opponentNameText.setText(opponent.getName());
+                        firstChar.setText(String.format("%s", opponent.getName().charAt(0)));
+                        // Todo: Set this
+//                        firstChar.setBackground();
+                        itemView.setVisibility(View.VISIBLE);
+                    } else {
+                        Log.e("documentSnapshot", documentSnapshot.getId());
+                        Log.e("conversation.getId(2)", conversation.getId());
                     }
-                    itemView.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -127,4 +154,11 @@ public class ConversationAdapter extends FirestoreRecyclerAdapter<Conversation, 
     public interface ConversationClickListener {
         void onConversationClick(DocumentReference conversationRef);
     }
+
+    public int anyBG() {
+        Random randomGenerator = new Random();
+        int index = randomGenerator.nextInt(myImageList.length);
+        return myImageList[index];
+    }
+
 }
